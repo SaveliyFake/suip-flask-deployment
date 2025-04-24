@@ -1,0 +1,40 @@
+<ul>
+    {% if data %}
+        {% for item in data %}
+            <li class="list-item" data-id="{{ item.ID }}">
+                <img src="" data-src="{{ url_for('static', filename='images/krisa.webp') }}" loading="lazy" class="item-image" height="90">
+                <div class="item-data-container">
+                    <div class="item-data" style="grid-template-columns: auto auto;">
+                        <div class="data-row" style="order: 1;">
+                            <strong class="name">{{ item.TYPE }}</strong>
+                        </div>
+                        <div class="data-row" style="order: 3;">
+                            <span class="type black">{{ item.NAME }}</span>
+                            <span class="store_address gray">{{ item.STORE_ADDRESS }}</span>
+                            <span class="serial_number gray">{{ item.SERIAL_NUMBER }}</span>
+                            <span class="part_number gray">{{ item.PART_NUMBER }}</span>
+                            <span class="receive_date gray">{{ item.RECEIVE_DATE }}</span>
+                        </div>
+                        <div class="data-row place" style="order: 2;">
+                            <div class="place-block row">
+                                <span class="span-start">Ряд</span>
+                                <span class="span-end">{{ item.ROW }}</span>
+                            </div>
+                            <div class="place-block shelf">
+                                <span class="span-start">Полка</span>
+                                <span class="span-end">{{ item.SHELF }}</span>
+                            </div>
+                            <div class="place-block container">
+                                <span class="span-start">Конт.</span>
+                                <span class="span-end">{{ item.CONTAINER }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <img src="{{ url_for('static', filename='images/alt-arrow-right.svg') }}"  loading="lazy" height="24" width="24">
+            </li>
+        {% endfor %}
+    {% else %}
+        <li class="no-results">Ничего не найдено</li>
+    {% endif %}
+</ul>

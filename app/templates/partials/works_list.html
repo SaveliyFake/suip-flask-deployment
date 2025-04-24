@@ -1,0 +1,30 @@
+<ul>
+    {% if data %}
+        {% for item in data %}
+            <li class="list-item" data-id="{{ item.ID }}">
+                <img src="" data-src="{{ url_for('static', filename='images/toy3.webp') }}" loading="lazy" class="item-image" height="90">
+                <div class="item-data-container">
+                    <div class="item-data">
+                        <div class="data-row">
+                            <strong class="name">{{ item.DESCRIPTION }}</strong>
+                        </div>
+                        <div class="data-row">
+                            <span class="os black">{{ item.OS }}</span>
+                            <span class="planned_date gray">{{ item.PLANNED_DATE }}</span>
+                            <span class="status
+                                {% if item.STATUS == 'Завершено' %} completed
+                                {% elif item.STATUS == 'В процессе' %} in-progress
+                                {% elif item.STATUS == 'Запланировано' %} planned
+                                {% endif %}">
+                                {{ item.STATUS }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <img src="{{ url_for('static', filename='images/alt-arrow-right.svg') }}"  loading="lazy" height="24" width="24">
+            </li>
+        {% endfor %}
+    {% else %}
+        <li class="no-results">Ничего не найдено</li>
+    {% endif %}
+</ul>

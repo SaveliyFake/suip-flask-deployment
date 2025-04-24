@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}СУиП{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <!-- Меню -->
+        <div class="menu-sidebar">
+            <img src="{{ url_for('static', filename='images/menu.svg') }}" height="24" width="24">
+        </div>
+
+        <!-- Логотип и название -->
+        <div class="logo-and-name">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" height="52" width="52">
+            <div>
+                <h1>СУиП</h1>
+                <span>Система управления и планирования</span>
+            </div>
+        </div>
+
+        <!-- Поиск -->
+        <form class="search-form" id="desktopSrch" action="{{ url_for('api.get_table', table_name=active_table) }}" method="get">
+            <div style="display: flex; align-items: center; position: relative; width: 100%;">
+                <img id="searchImg" src="{{ url_for('static', filename='images/search-gray.svg') }}" height="20" width="20">
+                <input type="text" name="search" id="searchInput" class="search-input" placeholder="Найти" value="{{ search_query }}">
+                <img id="clearSearch" src="{{ url_for('static', filename='images/close.svg') }}" height="16" width="16">
+            </div>
+
+            <button class="barcode-search" type="button">
+                <img src="{{ url_for('static', filename='images/barcode-gray.svg') }}" height="32" width="32">
+            </button>
+        </form>
+
+        <!-- Профиль и уведомления -->
+        <div class="profile-and-notification">
+            <button id="profile">
+                <img id="imgLine" src="{{ url_for('static', filename='images/user-line.svg') }}" height="24" width="24"> 
+                <img id="imgWhite" src="{{ url_for('static', filename='images/user-white.svg') }}" height="24" width="24"> 
+                <span>Профиль</span>
+            </button>
+            <button id="notifications">
+                <img src="{{ url_for('static', filename='images/bell-white.svg') }}" height="24" width="24">  
+            </button>
+        </div>
+    </header>
+
+    <div style="display: flex; margin-bottom: 80px;">
+        <div class="menu">
+            <!-- Хедер навигации -->
+            <div class="navigation-header">
+                <div class="logo-and-name">
+                    <img src="{{ url_for('static', filename='images/logo.svg') }}" height="24" width="24">
+                    <h1>СУиП</h1>
+                </div>
+                <img id="closeImg" src="{{ url_for('static', filename='images/alt-arrow-left.svg') }}" height="24" width="24">
+            </div>
+
+            <!-- Навигация -->
+            <nav class="nav-bar">
+                <span class="section">Таблицы</span>
+
+                {% set table_translations = {
+                    'os': 'ОС',
+                    'works': 'Работы',
+                    'materials': 'Материалы',
+                    'equipment': 'Оборудование'
+                } %}
+
+                {% for table in ['os', 'works', 'materials', 'equipment'] %}
+                    <a 
+                        href="{{ url_for('api.get_table', table_name=table) }}" 
+                        class="nav-item {% if active_table == table %}active{% endif %}"
+                        data-table="{{table}}"
+                    >
+                        <img height="30" width="30" src="{{ url_for('static', filename='images/' + table + '.svg') }}">
+                        {{ table_translations.get(table, table) }}
+                    </a>
+                {% endfor %}
+
+                <!-- <span class="section" style="margin-top: 1rem;">Редактирование</span>
+
+                <button id="openAddForm">
+                    <img height="30" width="30" src="{{ url_for('static', filename='images/add.svg') }}">
+                    Добавить
+                </button> -->
+            </nav>
+        </div>
+            
+
+        <div class="overlay"></div>
+
+        <!-- Основной контент -->
+        <section class="table-container">
+            {% block content %}
+            {% endblock %}
+        </section>
+    </div>
+
+    <!-- Плавающее меню (не доделано!!!) -->
+    <!-- <div class="floating-container">
+        <span style="font-size: 28px; font-weight: 600; color: white;">Меню</span>
+        <button>Наверх</button>
+        <button>Вниз</button>
+        <button class="floating-btn" onclick="toggleNotes()">Блокнот</button>
+        <div class="notes-panel" id="notesPanel">
+            <textarea placeholder="Ваши заметки..."></textarea>
+        </div>
+        <button id="openAddForm">
+            <span style="font-size: 20px;">+</span>
+            Добавить запись
+        </button>
+    </div> -->
+
+    <!-- Плавающая кнопка -->
+    <button class="floating-button">+</button>
+
+    <!-- Форма элмента -->
+    <form class="item-form">
+        <div class="form-header">
+            <h2>Детали записи</h2>
+            <img class="close-form" src="{{ url_for('static', filename='images/close.svg') }}" height="24" width="24">
+        </div>
+        <div class="form-content">
+
+        </div>
+        <div class="form-actions">
+            <button class="btn-delete" type="button">
+                <img src="{{ url_for('static', filename='images/delete.svg') }}" height="24" width="24">
+                <span>Удалить</span>
+            </button>
+            <button class="btn-edit" type="button">
+                <img id="changeGray" src="{{ url_for('static', filename='images/change-gray.svg') }}" height="24" width="24">
+                <img id="changeWhite" src="{{ url_for('static', filename='images/change-white.svg') }}" height="24" width="24">
+                <span>Изменить</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Модальное окно -->
+    <div class="modal"></div>
+    
+    <script>
+        const backImgModal = "{{ url_for('static', filename='images/arrow-left.svg') }}"
+        const closeImgModal = "{{ url_for('static', filename='images/close.svg') }}"
+    </script>
+
+    <div class="success-message">
+        <img height="80" width="80" src="{{ url_for('static', filename='images/check-green.svg') }}">
+        <h2></h2>
+    </div>
+
+    <!-- Общие скрипты -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Файлы Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Файлы окружения
+.env
+.venv/
+venv/
+
+# IDE и системные файлы
+.vscode/
+.idea/
+.DS_Store
